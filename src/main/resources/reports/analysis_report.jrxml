@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport
+  xmlns="http://jasperreports.sourceforge.net/jasperreports"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="
+        http://jasperreports.sourceforge.net/jasperreports
+        http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+  name="laboratorio_clinico_report"
+  pageWidth="419" pageHeight="595"
+  columnWidth="379"
+  leftMargin="20" rightMargin="20"
+  topMargin="20" bottomMargin="20"
+  language="java">
+
+  <!-- Parámetros principales -->
+  <parameter name="patientName" class="java.lang.String"/>
+  <parameter name="patientLastName" class="java.lang.String"/>
+  <parameter name="patientPersonalId" class="java.lang.String"/>
+  <parameter name="patientBirthDate" class="java.util.Date"/>
+  <parameter name="patientPhone" class="java.lang.String"/>
+  <parameter name="patientEmail" class="java.lang.String"/>
+  <parameter name="doctorName" class="java.lang.String"/>
+  <parameter name="healthInsuranceName" class="java.lang.String"/>
+  <parameter name="analysisDate" class="java.util.Date"/>
+  <parameter name="analysisNumber" class="java.lang.Long"/>
+
+  <!-- Campos para cada práctica de análisis -->
+  <field name="practiceCode" class="java.lang.Long"/>
+  <field name="practiceName" class="java.lang.String"/>
+  <field name="result" class="java.lang.Double"/>
+  <field name="referenceValueLow" class="java.lang.Double"/>
+  <field name="referenceValueHigh" class="java.lang.Double"/>
+  <field name="unit" class="java.lang.String"/>
+
+  <!-- Variables para formateo -->
+  <variable name="referenceRange" class="java.lang.String">
+    <variableExpression><![CDATA[
+      ($F{referenceValueLow} != null && $F{referenceValueHigh} != null) ?
+      $F{referenceValueLow}.toString() + " - " + $F{referenceValueHigh}.toString() :
+      ($F{referenceValueLow} != null ? "> " + $F{referenceValueLow}.toString() :
+      ($F{referenceValueHigh} != null ? "< " + $F{referenceValueHigh}.toString() : ""))
+    ]]></variableExpression>
+  </variable>
+
+  <!-- Encabezado del laboratorio -->
+  <title>
+    <band height="120">
+      <!-- Logo y nombre del laboratorio -->
+      <staticText>
+        <reportElement x="250" y="10" width="120" height="25"/>
+        <textElement textAlignment="Center" verticalAlignment="Middle">
+          <font size="18" isBold="true"/>
+        </textElement>
+        <text><![CDATA[LABORATORIO]]></text>
+      </staticText>
+
+      <staticText>
+        <reportElement x="280" y="35" width="60" height="20"/>
+        <textElement textAlignment="Center" verticalAlignment="Middle">
+          <font size="14" isBold="true"/>
+        </textElement>
+        <text><![CDATA[AUDAY]]></text>
+      </staticText>
+
+      <!-- Información del paciente -->
+      <staticText>
+        <reportElement x="10" y="70" width="60" height="12"/>
+        <textElement>
+          <font size="8" isBold="true"/>
+        </textElement>
+        <text><![CDATA[Paciente:]]></text>
+      </staticText>
+
+      <textField>
+        <reportElement x="70" y="70" width="200" height="12"/>
+        <textElement>
+          <font size="8"/>
+        </textElement>
+        <textFieldExpression><![CDATA[$P{patientLastName} + ", " + $P{patientName}]]></textFieldExpression>
+      </textField>
+
+      <staticText>
+        <reportElement x="10" y="85" width="60" height="12"/>
+        <textElement>
+          <font size="8" isBold="true"/>
+        </textElement>
+        <text><![CDATA[Protocolo Nro:]]></text>
+      </staticText>
+
+      <textField>
+        <reportElement x="70" y="85" width="100" height="12"/>
+        <textElement>
+          <font size="8"/>
+        </textElement>
+        <textFieldExpression><![CDATA[$P{analysisNumber}]]></textFieldExpression>
+      </textField>
+
+      <staticText>
+        <reportElement x="200" y="85" width="40" height="12"/>
+        <textElement>
+          <font size="8" isBold="true"/>
+        </textElement>
+        <text><![CDATA[Fecha:]]></text>
+      </staticText>
+
+      <textField pattern="dd/MM/yyyy">
+        <reportElement x="240" y="85" width="80" height="12"/>
+        <textElement>
+          <font size="8"/>
+        </textElement>
+        <textFieldExpression><![CDATA[$P{analysisDate}]]></textFieldExpression>
+      </textField>
+
+      <!-- Información adicional del paciente -->
+      <staticText>
+        <reportElement x="10" y="100" width="60" height="12"/>
+        <textElement>
+          <font size="8" isBold="true"/>
+        </textElement>
+        <text><![CDATA[Solicitado por:]]></text>
+      </staticText>
+
+      <textField isBlankWhenNull="true">
+        <reportElement x="70" y="100" width="150" height="12"/>
+        <textElement>
+          <font size="8"/>
+        </textElement>
+        <textFieldExpression><![CDATA[$P{doctorName}]]></textFieldExpression>
+      </textField>
+
+      <staticText>
+        <reportElement x="240" y="100" width="60" height="12"/>
+        <textElement>
+          <font size="8" isBold="true"/>
+        </textElement>
+        <text><![CDATA[Obra Social:]]></text>
+      </staticText>
+
+      <textField isBlankWhenNull="true">
+        <reportElement x="300" y="100" width="70" height="12"/>
+        <textElement>
+          <font size="8"/>
+        </textElement>
+        <textFieldExpression><![CDATA[$P{healthInsuranceName}]]></textFieldExpression>
+      </textField>
+    </band>
+  </title>
+
+  <!-- Separador y encabezados de columnas -->
+  <pageHeader>
+    <band height="30">
+      <line>
+        <reportElement x="0" y="5" width="379" height="1"/>
+      </line>
+
+      <staticText>
+        <reportElement x="10" y="15" width="80" height="12"/>
+        <textElement>
+          <font size="8" isBold="true"/>
+        </textElement>
+        <text><![CDATA[DETERMINACIÓN]]></text>
+      </staticText>
+
+      <staticText>
+        <reportElement x="180" y="15" width="50" height="12"/>
+        <textElement textAlignment="Center">
+          <font size="8" isBold="true"/>
+        </textElement>
+        <text><![CDATA[RESULTADO]]></text>
+      </staticText>
+
+      <staticText>
+        <reportElement x="280" y="15" width="80" height="12"/>
+        <textElement textAlignment="Center">
+          <font size="8" isBold="true"/>
+        </textElement>
+        <text><![CDATA[VALORES DE REF.]]></text>
+      </staticText>
+    </band>
+  </pageHeader>
+
+  <!-- Detalle de cada práctica -->
+  <detail>
+    <band height="15">
+      <!-- Nombre de la práctica -->
+      <textField>
+        <reportElement x="10" y="2" width="160" height="11"/>
+        <textElement>
+          <font size="8"/>
+        </textElement>
+        <textFieldExpression><![CDATA[$F{practiceName}]]></textFieldExpression>
+      </textField>
+
+      <!-- Resultado -->
+      <textField pattern="#,##0.00" isBlankWhenNull="true">
+        <reportElement x="180" y="2" width="50" height="11"/>
+        <textElement textAlignment="Center">
+          <font size="8"/>
+        </textElement>
+        <textFieldExpression><![CDATA[$F{result}]]></textFieldExpression>
+      </textField>
+
+      <!-- Unidad -->
+      <textField isBlankWhenNull="true">
+        <reportElement x="235" y="2" width="30" height="11"/>
+        <textElement>
+          <font size="8"/>
+        </textElement>
+        <textFieldExpression><![CDATA[$F{unit}]]></textFieldExpression>
+      </textField>
+
+      <!-- Valores de referencia -->
+      <textField isBlankWhenNull="true">
+        <reportElement x="280" y="2" width="80" height="11"/>
+        <textElement textAlignment="Center">
+          <font size="8"/>
+        </textElement>
+        <textFieldExpression><![CDATA[$V{referenceRange}]]></textFieldExpression>
+      </textField>
+    </band>
+  </detail>
+
+  <!-- Pie de página con información del laboratorio -->
+  <pageFooter>
+    <band height="80">
+      <line>
+        <reportElement x="0" y="10" width="379" height="1"/>
+      </line>
+
+      <!-- Información del laboratorio -->
+      <staticText>
+        <reportElement x="10" y="20" width="100" height="10"/>
+        <textElement>
+          <font size="7"/>
+        </textElement>
+        <text><![CDATA[Pasteur 856 - Gral San Martín - La Pampa]]></text>
+      </staticText>
+
+      <staticText>
+        <reportElement x="10" y="32" width="150" height="10"/>
+        <textElement>
+          <font size="7"/>
+        </textElement>
+        <text><![CDATA[Tel 02931564022565 - 02926497500]]></text>
+      </staticText>
+
+      <!-- Información del análisis -->
+      <staticText>
+        <reportElement x="200" y="20" width="60" height="10"/>
+        <textElement>
+          <font size="7"/>
+        </textElement>
+        <text><![CDATA[Análisis Nro:]]></text>
+      </staticText>
+
+      <textField>
+        <reportElement x="260" y="20" width="100" height="10"/>
+        <textElement>
+          <font size="7"/>
+        </textElement>
+        <textFieldExpression><![CDATA[$P{analysisNumber}]]></textFieldExpression>
+      </textField>
+
+      <staticText>
+        <reportElement x="200" y="32" width="30" height="10"/>
+        <textElement>
+          <font size="7"/>
+        </textElement>
+        <text><![CDATA[Fecha:]]></text>
+      </staticText>
+
+      <textField pattern="dd/MM/yyyy">
+        <reportElement x="230" y="32" width="80" height="10"/>
+        <textElement>
+          <font size="7"/>
+        </textElement>
+        <textFieldExpression><![CDATA[$P{analysisDate}]]></textFieldExpression>
+      </textField>
+
+      <!-- Firma digital -->
+      <staticText>
+        <reportElement x="10" y="55" width="150" height="20"/>
+        <textElement>
+          <font size="7"/>
+        </textElement>
+        <text><![CDATA[CLAUDIO AUDAY
+Bioquímico
+M.P. 1446]]></text>
+      </staticText>
+    </band>
+  </pageFooter>
+
+</jasperReport>

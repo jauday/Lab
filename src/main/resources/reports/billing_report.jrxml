@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport
+  xmlns="http://jasperreports.sourceforge.net/jasperreports"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="
+        http://jasperreports.sourceforge.net/jasperreports
+        http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+  name="analysis_report"
+  pageWidth="595" pageHeight="842"
+  columnWidth="515"
+  leftMargin="40" rightMargin="40"
+  topMargin="50" bottomMargin="50"
+  language="java">
+
+  <!-- Parámetros que usarás desde tu servicio -->
+  <parameter name="total" class="java.lang.Double"/>
+  <parameter name="healthInsurance" class="java.lang.String"/>
+
+  <!-- Campos de cada AnalysisPractice -->
+  <field name="patientName" class="java.lang.String"/>
+  <field name="patientHealthInsurancePersonalId" class="java.lang.String"/>
+  <field name="realizationDate" class="java.time.LocalDate"/>
+  <field name="practiceCodesCsv" class="java.lang.String"/>
+  <field name="subTotal" class="java.lang.Double"/>
+
+  <!-- 1) Encabezado del reporte -->
+  <title>
+    <band height="70">
+      <staticText>
+        <reportElement x="0" y="0" width="515" height="20"/>
+        <textElement textAlignment="Center">
+          <font size="16" isBold="true"/>
+        </textElement>
+        <text><![CDATA[Reporte de Análisis Clínico]]></text>
+      </staticText>
+
+      <line>
+        <reportElement x="0" y="25" width="515" height="1"/>
+      </line>
+
+      <staticText>
+        <reportElement x="0" y="35" width="80" height="15"/>
+        <textElement>
+          <font isBold="true"/>
+        </textElement>
+        <text><![CDATA[Obra Social:]]></text>
+      </staticText>
+      <textField>
+        <reportElement x="80" y="35" width="220" height="15"/>
+        <textElement/>
+        <textFieldExpression><![CDATA[$P{healthInsurance}]]></textFieldExpression>
+      </textField>
+
+      <staticText>
+        <reportElement x="320" y="35" width="100" height="15"/>
+        <textElement>
+          <font isBold="true"/>
+        </textElement>
+        <text><![CDATA[Fecha de Emisión:]]></text>
+      </staticText>
+      <textField pattern="dd/MM/yyyy">
+        <reportElement x="420" y="35" width="95" height="15"/>
+        <textElement textAlignment="Right"/>
+        <textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+      </textField>
+
+      <staticText>
+        <reportElement x="320" y="50" width="100" height="15"/>
+        <textElement>
+          <font isBold="true"/>
+        </textElement>
+        <text><![CDATA[Mes a Facturar:]]></text>
+      </staticText>
+      <textField>
+        <reportElement x="420" y="50" width="95" height="15"/>
+        <textElement textAlignment="Right"/>
+        <textFieldExpression><![CDATA[new java.text.SimpleDateFormat("MMMM yyyy", new java.util.Locale("es", "ES")).format(new java.util.Date())]]></textFieldExpression>
+      </textField>
+
+      <line>
+        <reportElement x="0" y="68" width="515" height="1"/>
+      </line>
+    </band>
+  </title>
+
+  <!-- 2) Cabecera de columnas -->
+  <columnHeader>
+    <band height="25">
+      <staticText>
+        <reportElement x="0" y="5" width="80" height="15"/>
+        <textElement>
+          <font isBold="true"/>
+        </textElement>
+        <text><![CDATA[Paciente]]></text>
+      </staticText>
+      <staticText>
+        <reportElement x="85" y="5" width="70" height="15"/>
+        <textElement textAlignment="Center">
+          <font isBold="true"/>
+        </textElement>
+        <text><![CDATA[Carnet]]></text>
+      </staticText>
+      <staticText>
+        <reportElement x="160" y="5" width="80" height="15"/>
+        <textElement textAlignment="Center">
+          <font isBold="true"/>
+        </textElement>
+        <text><![CDATA[Fecha Realización]]></text>
+      </staticText>
+      <staticText>
+        <reportElement x="245" y="5" width="180" height="15"/>
+        <textElement textAlignment="Center">
+          <font isBold="true"/>
+        </textElement>
+        <text><![CDATA[Prácticas]]></text>
+      </staticText>
+      <staticText>
+        <reportElement x="430" y="5" width="85" height="15"/>
+        <textElement textAlignment="Right">
+          <font isBold="true"/>
+        </textElement>
+        <text><![CDATA[Subtotal]]></text>
+      </staticText>
+
+      <line>
+        <reportElement x="0" y="22" width="515" height="1"/>
+      </line>
+    </band>
+  </columnHeader>
+
+  <!-- 3) Detalle -->
+  <detail>
+    <band height="20">
+      <textField>
+        <reportElement x="0" y="2" width="80" height="15"/>
+        <textElement/>
+        <textFieldExpression><![CDATA[$F{patientName}]]></textFieldExpression>
+      </textField>
+      <textField>
+        <reportElement x="85" y="2" width="70" height="15"/>
+        <textElement textAlignment="Center"/>
+        <textFieldExpression><![CDATA[$F{patientHealthInsurancePersonalId}]]></textFieldExpression>
+      </textField>
+      <textField pattern="dd/MM/yyyy">
+        <reportElement x="160" y="2" width="80" height="15"/>
+        <textElement textAlignment="Center"/>
+        <textFieldExpression><![CDATA[$F{realizationDate}]]></textFieldExpression>
+      </textField>
+      <textField  textAdjust="StretchHeight">
+        <reportElement x="245" y="2" width="180" height="15"/>
+        <textElement textAlignment="Center"/>
+        <textFieldExpression><![CDATA[$F{practiceCodesCsv}]]></textFieldExpression>
+      </textField>
+      <textField pattern="#,##0.00">
+        <reportElement x="430" y="2" width="85" height="15"/>
+        <textElement textAlignment="Right"/>
+        <textFieldExpression><![CDATA[$F{subTotal}]]></textFieldExpression>
+      </textField>
+    </band>
+  </detail>
+
+  <!-- 4) Pie de página con total -->
+  <pageFooter>
+    <band height="40">
+      <line>
+        <reportElement x="350" y="5" width="165" height="1"/>
+      </line>
+
+      <staticText>
+        <reportElement x="350" y="10" width="80" height="15"/>
+        <textElement textAlignment="Right">
+          <font isBold="true" size="12"/>
+        </textElement>
+        <text><![CDATA[TOTAL:]]></text>
+      </staticText>
+      <textField pattern="#,##0.00">
+        <reportElement x="430" y="10" width="85" height="15"/>
+        <textElement textAlignment="Right">
+          <font isBold="true" size="12"/>
+        </textElement>
+        <textFieldExpression><![CDATA[$P{total}]]></textFieldExpression>
+      </textField>
+
+      <textField>
+        <reportElement x="0" y="30" width="515" height="10"/>
+        <textElement textAlignment="Center">
+          <font size="8"/>
+        </textElement>
+        <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+      </textField>
+    </band>
+  </pageFooter>
+</jasperReport>
